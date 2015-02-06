@@ -8,8 +8,8 @@
 #define DECLARE_FACTORY_2(Base, KeyType) \
   template<> std::map<KeyType, std::shared_ptr<AbstractFactory<Base>>> FactoryStore<Base, KeyType>::_factories = {};
 
-#define REGISTER_FACTORY(Base, CType, Key) static FactoryRegisterer<Base, CType, FactoryKeyType<Base>::Type> Base##CType##_factory_registerer(Key);
-#define REGISTER_FACTORY_2(Base, Type, KeyType, Key) static FactoryRegisterer<Base, Type, KeyType> Base##Type##KeyType##_factory_registerer(Key);
+#define REGISTER_FACTORY(Base, CType, Key) static FactoryRegistrar<Base, CType, FactoryKeyType<Base>::Type> Base##CType##_factory_registrar(Key);
+#define REGISTER_FACTORY_2(Base, Type, KeyType, Key) static FactoryRegistrar<Base, Type, KeyType> Base##Type##KeyType##_factory_registrar(Key);
 
 template<typename T>
 class AbstractFactory {
@@ -53,9 +53,9 @@ class SimpleFactory : public AbstractFactory<T> {
 };
 
 template<typename T, typename I, typename K>
-class FactoryRegisterer {
+class FactoryRegistrar {
   public:
-    FactoryRegisterer(K key) {
+    FactoryRegistrar(K key) {
       FactoryStore<T,K>::register_factory(key, std::make_shared<SimpleFactory<T, I>>());
     }
 };
